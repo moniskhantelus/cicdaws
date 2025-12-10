@@ -6,6 +6,7 @@ terraform {
     dynamodb_table = "terraform-lock-table"
     encrypt        = true
   }
-}provider "aws" {
+}
+provider "aws" {
   region = "us-east-1"
 }
