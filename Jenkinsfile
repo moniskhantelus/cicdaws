@@ -21,16 +21,12 @@ pipeline {
                     echo "Triggering Terraform PLAN via CodeBuild"
 
                     awsCodeBuild(
+                        credentialsType: 'jenkins',                // REQUIRED
                         credentialsId: CODEBUILD_CREDS,
                         projectName: PROJECT_NAME,
                         region: AWS_REGION,
                         sourceVersion: "main",
-                        envVariables: """
-                        [
-                            {"name":"ACTION", "value":"plan"}
-                        ]
-                        """,
-                        waitForCompletion: true
+                        envVariables: '[{"name":"ACTION","value":"plan"}]'   // JSON STRING
                     )
                 }
             }
@@ -48,16 +44,12 @@ pipeline {
                     echo "Triggering Terraform APPLY via CodeBuild"
 
                     awsCodeBuild(
+                        credentialsType: 'jenkins',
                         credentialsId: CODEBUILD_CREDS,
                         projectName: PROJECT_NAME,
                         region: AWS_REGION,
                         sourceVersion: "main",
-                        envVariables: """
-                        [
-                            {"name":"ACTION", "value":"apply"}
-                        ]
-                        """,
-                        waitForCompletion: true
+                        envVariables: '[{"name":"ACTION","value":"apply"}]'
                     )
                 }
             }
