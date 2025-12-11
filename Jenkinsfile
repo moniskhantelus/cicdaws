@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         AWS_REGION      = 'us-east-1'
-        CODEBUILD_CREDS = 'codebuild-creds'    // Your new CodeBuild credential ID
+        CODEBUILD_CREDS = 'codebuild-creds'
         PROJECT_NAME    = 'devops'
     }
 
@@ -18,15 +18,15 @@ pipeline {
         stage('Terraform Plan (CodeBuild)') {
             steps {
                 script {
-                    echo "Triggering Terraform PLAN via CodeBuild"
+                    echo "PLAN → CodeBuild"
 
                     awsCodeBuild(
                         credentialsType: 'keys',
                         credentialsId: CODEBUILD_CREDS,
                         projectName: PROJECT_NAME,
                         region: AWS_REGION,
-                        sourceControlType: 'project',   // REQUIRED FIX
-                        sourceVersion: "main",
+                        sourceControlType: 'project',     // REQUIRED
+                        sourceVersion: 'main',
                         envVariables: '[{"name":"ACTION","value":"plan"}]'
                     )
                 }
@@ -35,22 +35,22 @@ pipeline {
 
         stage('Approval') {
             steps {
-                input message: "Review plan. Proceed with apply?"
+                input message: "Review plan. Proceed?"
             }
         }
 
         stage('Terraform Apply (CodeBuild)') {
             steps {
                 script {
-                    echo "Triggering Terraform APPLY via CodeBuild"
+                    echo "APPLY → CodeBuild"
 
                     awsCodeBuild(
                         credentialsType: 'keys',
                         credentialsId: CODEBUILD_CREDS,
                         projectName: PROJECT_NAME,
                         region: AWS_REGION,
-                        sourceControlType: 'project',   // REQUIRED FIX
-                        sourceVersion: "main",
+                        sourceControlType: 'project',     // REQUIRED
+                        sourceVersion: 'main',
                         envVariables: '[{"name":"ACTION","value":"apply"}]'
                     )
                 }
@@ -59,11 +59,7 @@ pipeline {
     }
 
     post {
-        success {
-            echo "Terraform deployment SUCCESSFUL!"
-        }
-        failure {
-            echo "Terraform deployment FAILED."
-        }
+        success { echo "SUCCESS" }
+        failure { echo "FAILURE" }
     }
 }
