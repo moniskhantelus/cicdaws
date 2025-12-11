@@ -20,27 +20,22 @@ pipeline {
                 script {
                     echo "Triggering Terraform PLAN via CodeBuild"
 
-                    def result = awsCodeBuild(
+                    awsCodeBuild(
                         credentialsId: CODEBUILD_CREDS,
                         projectName: PROJECT_NAME,
                         region: AWS_REGION,
-                        sourceVersion: "main",
                         envVariables: [
                             [key: 'ACTION', value: 'plan']
                         ],
                         waitForCompletion: true
                     )
-
-                    echo "PLAN build result: ${result.buildStatus}"
                 }
             }
         }
 
         stage('Approval') {
             steps {
-                script {
-                    input message: "Review Terraform plan. Proceed with apply?"
-                }
+                input message: "Review Terraform plan. Proceed with apply?"
             }
         }
 
@@ -49,18 +44,15 @@ pipeline {
                 script {
                     echo "Triggering Terraform APPLY via CodeBuild"
 
-                    def result = awsCodeBuild(
+                    awsCodeBuild(
                         credentialsId: CODEBUILD_CREDS,
                         projectName: PROJECT_NAME,
                         region: AWS_REGION,
-                        sourceVersion: "main",
                         envVariables: [
                             [key: 'ACTION', value: 'apply']
                         ],
                         waitForCompletion: true
                     )
-
-                    echo "APPLY build result: ${result.buildStatus}"
                 }
             }
         }
