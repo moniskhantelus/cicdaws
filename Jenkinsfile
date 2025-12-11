@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         AWS_REGION      = 'us-east-1'
-        CODEBUILD_CREDS = 'codebuild-creds'
+        CODEBUILD_CREDS = 'codebuild-creds'    // Your new CodeBuild credential ID
         PROJECT_NAME    = 'devops'
     }
 
@@ -21,12 +21,13 @@ pipeline {
                     echo "Triggering Terraform PLAN via CodeBuild"
 
                     awsCodeBuild(
-                        credentialsType: 'jenkins',                // REQUIRED
+                        credentialsType: 'keys',
                         credentialsId: CODEBUILD_CREDS,
                         projectName: PROJECT_NAME,
                         region: AWS_REGION,
+                        sourceControlType: 'project',   // REQUIRED FIX
                         sourceVersion: "main",
-                        envVariables: '[{"name":"ACTION","value":"plan"}]'   // JSON STRING
+                        envVariables: '[{"name":"ACTION","value":"plan"}]'
                     )
                 }
             }
@@ -44,10 +45,11 @@ pipeline {
                     echo "Triggering Terraform APPLY via CodeBuild"
 
                     awsCodeBuild(
-                        credentialsType: 'jenkins',
+                        credentialsType: 'keys',
                         credentialsId: CODEBUILD_CREDS,
                         projectName: PROJECT_NAME,
                         region: AWS_REGION,
+                        sourceControlType: 'project',   // REQUIRED FIX
                         sourceVersion: "main",
                         envVariables: '[{"name":"ACTION","value":"apply"}]'
                     )
