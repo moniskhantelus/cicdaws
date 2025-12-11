@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         AWS_REGION      = 'us-east-1'
-        CODEBUILD_CREDS = 'e1aa3d2f-6847-44cb-96cd-c2e335131379'
+        CODEBUILD_CREDS = 'codebuild-creds'
         PROJECT_NAME    = 'devops'
     }
 
