@@ -8,6 +8,7 @@ pipeline {
     }
 
     stages {
+
         stage('Checkout') {
             steps {
                 checkout scm
@@ -18,19 +19,15 @@ pipeline {
             steps {
                 script {
                     echo "Triggering Terraform PLAN via CodeBuild"
-                    def buildResult = codeBuild(
+
+                    awsCodeBuild(
                         credentialsId: CODEBUILD_CREDS,
                         projectName: PROJECT_NAME,
                         region: AWS_REGION,
-                        envVars: [
-                            [key: 'ACTION', value: 'plan']
-                        ],
+                        sourceVersion: "main",
+                        envVariables: "[{\"name\":\"ACTION\",\"value\":\"plan\"}]",
                         waitForCompletion: true
                     )
-                    echo "PLAN build status: ${buildResult.buildStatus}"
-                    if (buildResult.buildStatus != 'SUCCEEDED') {
-                        error("Terraform plan failed in CodeBuild!")
-                    }
                 }
             }
         }
@@ -38,7 +35,7 @@ pipeline {
         stage('Approval') {
             steps {
                 script {
-                    input message: "Review plan.txt in CodeBuild artifacts. Proceed to APPLY?"
+                    input message: "Review Terraform plan. Proceed with apply?"
                 }
             }
         }
@@ -47,19 +44,15 @@ pipeline {
             steps {
                 script {
                     echo "Triggering Terraform APPLY via CodeBuild"
-                    def buildResult = codeBuild(
+
+                    awsCodeBuild(
                         credentialsId: CODEBUILD_CREDS,
                         projectName: PROJECT_NAME,
                         region: AWS_REGION,
-                        envVars: [
-                            [key: 'ACTION', value: 'apply']
-                        ],
+                        sourceVersion: "main",
+                        envVariables: "[{\"name\":\"ACTION\",\"value\":\"apply\"}]",
                         waitForCompletion: true
                     )
-                    echo "APPLY build status: ${buildResult.buildStatus}"
-                    if (buildResult.buildStatus != 'SUCCEEDED') {
-                        error("Terraform apply failed in CodeBuild!")
-                    }
                 }
             }
         }
