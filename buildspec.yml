@@ -1,5 +1,9 @@
 version: 0.2
 
+env:
+  variables:
+    ACTION: "plan"   # Default value
+
 phases:
   install:
     commands:
@@ -7,13 +11,26 @@ phases:
       - curl -O https://releases.hashicorp.com/terraform/1.6.2/terraform_1.6.2_linux_arm64.zip
       - unzip terraform_1.6.2_linux_arm64.zip
       - mv terraform /usr/local/bin/
+
   pre_build:
     commands:
       - terraform --version
       - terraform init
+
   build:
     commands:
-      - terraform apply -auto-approve
+      - |
+        if [ "$ACTION" = "plan" ]; then
+          echo "Running terraform plan"
+          terraform plan -out=tfplan
+          terraform show -no-color tfplan > plan.txt
+        elif [ "$ACTION" = "apply" ]; then
+          echo "Running terraform apply"
+          terraform apply -auto-approve
+        else
+          echo "Invalid ACTION value: $ACTION"
+          exit 1
+        fi
 
 artifacts:
   files:
