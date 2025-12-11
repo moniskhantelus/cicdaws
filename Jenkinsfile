@@ -24,9 +24,12 @@ pipeline {
                         credentialsId: CODEBUILD_CREDS,
                         projectName: PROJECT_NAME,
                         region: AWS_REGION,
-                        envVariables: [
-                            [key: 'ACTION', value: 'plan']
-                        ],
+                        sourceVersion: "main",
+                        envVariables: """
+                        [
+                            {"name":"ACTION", "value":"plan"}
+                        ]
+                        """,
                         waitForCompletion: true
                     )
                 }
@@ -35,7 +38,7 @@ pipeline {
 
         stage('Approval') {
             steps {
-                input message: "Review Terraform plan. Proceed with apply?"
+                input message: "Review plan. Proceed with apply?"
             }
         }
 
@@ -48,9 +51,12 @@ pipeline {
                         credentialsId: CODEBUILD_CREDS,
                         projectName: PROJECT_NAME,
                         region: AWS_REGION,
-                        envVariables: [
-                            [key: 'ACTION', value: 'apply']
-                        ],
+                        sourceVersion: "main",
+                        envVariables: """
+                        [
+                            {"name":"ACTION", "value":"apply"}
+                        ]
+                        """,
                         waitForCompletion: true
                     )
                 }
