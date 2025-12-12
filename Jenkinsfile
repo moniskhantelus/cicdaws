@@ -21,8 +21,9 @@ pipeline {
 
                 withAWS(credentials: AWS_CREDS, region: AWS_REGION) {
                     awsCodeBuild(
+                        credentialsType: 'jenkins',      // 🔴 REQUIRED
                         projectName: PROJECT_NAME,
-                        region: AWS_REGION,               // 🔴 REQUIRED
+                        region: AWS_REGION,
                         sourceControlType: 'project',
                         sourceVersion: 'main',
                         envVariables: '[{"name":"ACTION","value":"plan"}]'
@@ -43,8 +44,9 @@ pipeline {
 
                 withAWS(credentials: AWS_CREDS, region: AWS_REGION) {
                     awsCodeBuild(
+                        credentialsType: 'jenkins',      // 🔴 REQUIRED
                         projectName: PROJECT_NAME,
-                        region: AWS_REGION,               // 🔴 REQUIRED
+                        region: AWS_REGION,
                         sourceControlType: 'project',
                         sourceVersion: 'main',
                         envVariables: '[{"name":"ACTION","value":"apply"}]'
