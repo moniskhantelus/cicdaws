@@ -19,14 +19,16 @@ pipeline {
             steps {
                 echo "PLAN → CodeBuild"
 
-                codeBuild(
-                    projectName: PROJECT_NAME,
-                    region: AWS_REGION,
-                    credentialsId: AWS_CREDS,
-                    envVariables: [
-                        [name: 'ACTION', value: 'plan']
-                    ]
-                )
+                withAWS(credentials: AWS_CREDS, region: AWS_REGION) {
+                    awsCodeBuild(
+                        projectName: PROJECT_NAME,
+                        sourceControlType: 'project',
+                        sourceVersion: 'main',
+                        envVariables: [
+                            [name: 'ACTION', value: 'plan']
+                        ]
+                    )
+                }
             }
         }
 
@@ -40,14 +42,16 @@ pipeline {
             steps {
                 echo "APPLY → CodeBuild"
 
-                codeBuild(
-                    projectName: PROJECT_NAME,
-                    region: AWS_REGION,
-                    credentialsId: AWS_CREDS,
-                    envVariables: [
-                        [name: 'ACTION', value: 'apply']
-                    ]
-                )
+                withAWS(credentials: AWS_CREDS, region: AWS_REGION) {
+                    awsCodeBuild(
+                        projectName: PROJECT_NAME,
+                        sourceControlType: 'project',
+                        sourceVersion: 'main',
+                        envVariables: [
+                            [name: 'ACTION', value: 'apply']
+                        ]
+                    )
+                }
             }
         }
     }
