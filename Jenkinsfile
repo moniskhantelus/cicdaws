@@ -24,9 +24,7 @@ pipeline {
                         projectName: PROJECT_NAME,
                         sourceControlType: 'project',
                         sourceVersion: 'main',
-                        envVariables: [
-                            [name: 'ACTION', value: 'plan']
-                        ]
+                        envVariables: '[{"name":"ACTION","value":"plan"}]'
                     )
                 }
             }
@@ -47,9 +45,7 @@ pipeline {
                         projectName: PROJECT_NAME,
                         sourceControlType: 'project',
                         sourceVersion: 'main',
-                        envVariables: [
-                            [name: 'ACTION', value: 'apply']
-                        ]
+                        envVariables: '[{"name":"ACTION","value":"apply"}]'
                     )
                 }
             }
