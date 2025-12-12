@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        AWS_REGION   = 'us-east-1'
+        AWS_REGION   = 'us-east-2'
         AWS_CREDS    = 'codebuild-creds'
         PROJECT_NAME = 'devops'
     }
@@ -22,6 +22,7 @@ pipeline {
                 withAWS(credentials: AWS_CREDS, region: AWS_REGION) {
                     awsCodeBuild(
                         projectName: PROJECT_NAME,
+                        region: AWS_REGION,               // 🔴 REQUIRED
                         sourceControlType: 'project',
                         sourceVersion: 'main',
                         envVariables: '[{"name":"ACTION","value":"plan"}]'
@@ -43,6 +44,7 @@ pipeline {
                 withAWS(credentials: AWS_CREDS, region: AWS_REGION) {
                     awsCodeBuild(
                         projectName: PROJECT_NAME,
+                        region: AWS_REGION,               // 🔴 REQUIRED
                         sourceControlType: 'project',
                         sourceVersion: 'main',
                         envVariables: '[{"name":"ACTION","value":"apply"}]'
