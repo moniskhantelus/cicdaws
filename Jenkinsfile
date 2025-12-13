@@ -1,9 +1,8 @@
-pipeline {
+ pipeline {
     agent any
 
     environment {
         AWS_REGION   = 'us-east-2'
-        AWS_CREDS    = 'codebuild-creds'
         PROJECT_NAME = 'devops'
     }
 
@@ -19,16 +18,15 @@ pipeline {
             steps {
                 echo "PLAN → CodeBuild"
 
-                withAWS(credentials: AWS_CREDS, region: AWS_REGION) {
-                    awsCodeBuild(
-                        credentialsType: 'jenkins',      // 🔴 REQUIRED
-                        projectName: PROJECT_NAME,
-                        region: AWS_REGION,
-                        sourceControlType: 'project',
-                        sourceVersion: 'main',
-                        envVariables: '[{"name":"ACTION","value":"plan"}]'
-                    )
-                }
+                awsCodeBuild(
+                    credentialsType: 'keys',
+                    credentialsId: 'codebuild-creds',
+                    projectName: PROJECT_NAME,
+                    region: AWS_REGION,
+                    sourceControlType: 'project',
+                    sourceVersion: 'main',
+                    envVariables: '[{"name":"ACTION","value":"plan"}]'
+                )
             }
         }
 
@@ -42,16 +40,15 @@ pipeline {
             steps {
                 echo "APPLY → CodeBuild"
 
-                withAWS(credentials: AWS_CREDS, region: AWS_REGION) {
-                    awsCodeBuild(
-                        credentialsType: 'jenkins',      // 🔴 REQUIRED
-                        projectName: PROJECT_NAME,
-                        region: AWS_REGION,
-                        sourceControlType: 'project',
-                        sourceVersion: 'main',
-                        envVariables: '[{"name":"ACTION","value":"apply"}]'
-                    )
-                }
+                awsCodeBuild(
+                    credentialsType: 'keys',
+                    credentialsId: 'codebuild-creds',
+                    projectName: PROJECT_NAME,
+                    region: AWS_REGION,
+                    sourceControlType: 'project',
+                    sourceVersion: 'main',
+                    envVariables: '[{"name":"ACTION","value":"apply"}]'
+                )
             }
         }
     }
