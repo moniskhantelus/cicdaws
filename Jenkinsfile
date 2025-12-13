@@ -1,10 +1,5 @@
- pipeline {
+pipeline {
     agent any
-
-    environment {
-        AWS_REGION   = 'us-east-2'
-        PROJECT_NAME = 'devops'
-    }
 
     stages {
 
@@ -19,10 +14,10 @@
                 echo "PLAN → CodeBuild"
 
                 awsCodeBuild(
-                    credentialsType: 'keys',
-                    credentialsId: 'codebuild-creds',
-                    projectName: PROJECT_NAME,
-                    region: AWS_REGION,
+                    credentialsType: 'keys',              // 🔴 REQUIRED
+                    credentialsId: 'codebuild-creds',     // 🔴 REQUIRED
+                    projectName: 'devops',
+                    region: 'us-east-2',
                     sourceControlType: 'project',
                     sourceVersion: 'main',
                     envVariables: '[{"name":"ACTION","value":"plan"}]'
@@ -43,18 +38,13 @@
                 awsCodeBuild(
                     credentialsType: 'keys',
                     credentialsId: 'codebuild-creds',
-                    projectName: PROJECT_NAME,
-                    region: AWS_REGION,
+                    projectName: 'devops',
+                    region: 'us-east-2',
                     sourceControlType: 'project',
                     sourceVersion: 'main',
                     envVariables: '[{"name":"ACTION","value":"apply"}]'
                 )
             }
         }
-    }
-
-    post {
-        success { echo "SUCCESS" }
-        failure { echo "FAILURE" }
     }
 }
