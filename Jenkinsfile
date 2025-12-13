@@ -14,8 +14,8 @@ pipeline {
                 echo "PLAN → CodeBuild"
 
                 awsCodeBuild(
-                    credentialsType: 'keys',              // 🔴 REQUIRED
-                    credentialsId: 'codebuild-creds',     // 🔴 REQUIRED
+                    credentialsType: 'jenkins',          // ✅ FIX
+                    credentialsId: 'codebuild-creds',    // ✅ FIX
                     projectName: 'devops',
                     region: 'us-east-2',
                     sourceControlType: 'project',
@@ -36,8 +36,8 @@ pipeline {
                 echo "APPLY → CodeBuild"
 
                 awsCodeBuild(
-                    credentialsType: 'keys',
-                    credentialsId: 'codebuild-creds',
+                    credentialsType: 'jenkins',          // ✅ FIX
+                    credentialsId: 'codebuild-creds',    // ✅ FIX
                     projectName: 'devops',
                     region: 'us-east-2',
                     sourceControlType: 'project',
